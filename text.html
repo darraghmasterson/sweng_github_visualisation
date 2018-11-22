@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+	
+		<script>
+			
+			var request = new XMLHttpRequest();
+
+				request.open('GET', 'https://api.github.com/users/defunkt/repos?per_page=100&page=' + 1, true);
+				request.onload = function ()
+				{
+
+					// Begin accessing JSON data here
+					var data = JSON.parse(this.response);
+					var repos = [];
+					var stars = [];
+						
+					if (request.status >= 200 && request.status < 400)
+					{
+						data.forEach(repo => 
+						{
+						  repos.push(repo.name);
+						  stars.push(repo.size);
+						});
+					}else
+					  {
+						console.log('error');
+					  }
+					  for(i=0;i<repos.length;i++)
+					  {
+						console.log(repos[i]);
+						console.log(stars[i]);
+						console.log(stars.length);
+					  }
+				}
+
+		
+			request.send();
+			</script>
+			
+</html>

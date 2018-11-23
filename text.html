@@ -4,38 +4,105 @@
 	
 		<script>
 			
+			function myFunction()
+			{
+			var x = document.getElementById("frm1");
+			console.log(x.elements[0].value);
 			var request = new XMLHttpRequest();
-
-				request.open('GET', 'https://api.github.com/users/defunkt/repos?per_page=100&page=' + 1, true);
+			var repos = [];
+			var languages = [];
+				request.open('GET', 'https://api.github.com/users/' + x.elements[0].value + '/repos?per_page=100&page=' + 1, true);
+				
 				request.onload = function ()
 				{
 
 					// Begin accessing JSON data here
 					var data = JSON.parse(this.response);
-					var repos = [];
-					var stars = [];
+					
 						
 					if (request.status >= 200 && request.status < 400)
 					{
 						data.forEach(repo => 
 						{
 						  repos.push(repo.name);
-						  stars.push(repo.size);
+						  languages.push(repo.language);
 						});
 					}else
 					  {
 						console.log('error');
 					  }
+					  
+					  var total=0;
+					  var count = [];
+					  dataP = [];
 					  for(i=0;i<repos.length;i++)
 					  {
 						console.log(repos[i]);
-						console.log(stars[i]);
-						console.log(stars.length);
+						console.log(languages[i]);
+						
+						var found = false;
+						for(var j=0;j<count.length;j++)
+						{
+							if(languages[i] != null)
+							{
+							if(languages[i] == count[j][0])
+							{
+								count[j][1] += 1;
+								found = true;	
+							}
+							}
+						}
+						if(!found & languages[i] != null)
+						{
+							count.push([languages[i], 1]);
+						}
+						console.log(count);
+						
+						
 					  }
+					  for(i=0;i<count.length;i++)
+					  {
+						dataP.push({y: count[i][1], label: count[i][0] + ":"});
+					  }
+					  
+					  console.log(dataP);
+					  drawChart(dataP);
+					  
 				}
-
-		
-			request.send();
-			</script>
+				request.send();
 			
+			}
+			
+			function drawChart(dataP) {
+			console.log(dataP);
+			var chart = new CanvasJS.Chart("chartContainer", {
+				animationEnabled: true,
+				title: {
+					text: "Languages Used by Github User"
+				},
+				data: [{
+					type: "pie",
+					startAngle: 240,
+					yValueFormatString: "#0",
+					indexLabel: "{label} {y}",
+					dataPoints: dataP
+						//{y: 1.26, label: "Others"}
+				}]
+			});
+			chart.render();
+			}
+			
+		</script>
+		<body>
+		<p>Enter github username:</p>
+
+		<form id="frm1" action="/action_page.php">
+		  User name: <input type="text" name="username"><br>
+		  <input type="button" onclick="myFunction()" value="Submit">
+		</form>
+		<div id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+		<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+		</body>
+
+
 </html>

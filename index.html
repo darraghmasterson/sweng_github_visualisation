@@ -83,6 +83,9 @@
 			console.log(dataP);
 			var chart = new CanvasJS.Chart("chartContainer", {
 				animationEnabled: true,
+				toolTip:{
+				borderColor: "black",
+				},
 				title: {
 					text: "Languages Used by Github User"
 				},
@@ -97,6 +100,8 @@
 			});
 			chart.render();
 			}
+
+					
 			
 		</script>
 		<body>
@@ -104,8 +109,11 @@
 		<p>Enter github username:</p>
 
 		<form id="frm1" >
-		  <input type="text" name="username"><br>
-		  <input type="button" onclick="myFunction()" value="Submit">
+		  <input id="textbox" type="text" name="username"><br>
+		  <input id="button" type="button" onclick="myFunction()" value="Submit">
+
+		 
+
 		</form>
 		</div>
 		<div id="chartContainer" style="height: 370px; width: 450px; margin: 0px auto;"></div>
